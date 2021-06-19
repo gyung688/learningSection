@@ -1,5 +1,5 @@
-# CheckYourStorage
-Check Your Storage는 생활용품점의 재고수량 등을 관리해주는 사이트입니다.
+# GreenMart
+GreenMart는 생활용품점의 재고수량 등을 관리해주는 사이트입니다.
 
 앞으로 만들 기능은 다음과 같습니다.
 1. 회원가입 
