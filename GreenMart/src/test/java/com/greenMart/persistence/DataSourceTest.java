@@ -30,7 +30,7 @@ public class DataSourceTest {
 			) {
 
 			System.out.println("con=" + con);
-			System.out.println("session = " + session);
+//			System.out.println("session = " + session);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
