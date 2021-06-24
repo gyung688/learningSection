@@ -20,7 +20,7 @@ public class JDBCTest {
 	
 	@Test
 	public void testConnection(){
-		try(Connection con = DriverManager.getConnection(
+		try(Connection con = DriverManager.getConnection(//커넥션객체생성
 					"jdbc:mysql://localhost:3306/greenMart?serverTimezone=Asia/Seoul",
 					"root",
 					"skek"

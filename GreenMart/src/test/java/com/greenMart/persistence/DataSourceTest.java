@@ -30,7 +30,10 @@ public class DataSourceTest {
 			) {
 
 			System.out.println("con=" + con);
-//			System.out.println("session = " + session);
+			System.out.println("session = " + session);
+			//SqlSessionFactoryBuilder : 설정 정보 읽어서 SqlSessionFactory 만드는 역할
+			//SqlSessionFactory : SqlSession을 만드는 역할
+			//SqlSession: 실제 sql을 날리는 역할
 			
 		} catch (Exception e) {
 			e.printStackTrace();
