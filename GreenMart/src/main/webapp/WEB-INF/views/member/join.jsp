@@ -16,7 +16,7 @@
 $(document).ready(function(){
 	//회원가입 버튼(회원가입 기능 작동)
 	$(".join_button").click(function(){
-		$("#join_form").attr("action","member/join");
+		$("#join_form").attr("action","/member/join");
 		$("#join_form").submit();
 	});
 });
