@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+.login_wrap{
+ 	display: flex; 
+ 	justify-content: center; 
+}
+
+.login_area{
+	display: flex;
+	align-items: center;
+}
+
+.login{
+	display: flex;
+	align-items: center;
+}
+
+.login_input{
+	margin-left: 5%;
+}
+
+.login_logo{
+	border-right: solid 1px;
+/* 	display: flex; */
+/* 	justify-content: center; */
+}
+
+.login{
+	
+}
