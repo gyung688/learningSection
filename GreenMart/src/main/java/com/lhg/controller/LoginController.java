@@ -14,6 +14,9 @@ public class LoginController {
 	}
 	
 	//회원가입
-	
+	@RequestMapping(value="/signUp.gr", method = RequestMethod.GET)
+	public String grSignUp() throws Exception{
+		return "login/signUp";
+	}
 	
 }

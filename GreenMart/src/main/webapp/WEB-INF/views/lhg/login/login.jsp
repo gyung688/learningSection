@@ -14,7 +14,6 @@
 <%-- <input type="hidden" id="pageIndex" name="pageIndex" value="${mainVO.pageIndex }"/> --%>
 	
 	<div class="login_area">
-		<h2>로그인</h2>
 		<div class="login">
 			<div class="login_logo">
 				<a class="logo">
@@ -23,16 +22,18 @@
 			</div>
 			<div class="login_input">
 				<div class="login_id">
-					<span class="log_sp">아이디</span>
+					<span class="log_sp">아이디</span><br/>
 					<input type="text" id="loginId" name="loginId">
 				</div>
 				
 				<div class="login_pw">
-					<span class="log_sp">비밀번호</span>
-					<input type="text" id="loginPw" name="loginPw">
+					<span class="log_sp">비밀번호</span><br/>
+					<input type="password" id="loginPw" name="loginPw">
 				</div>
 			</div>
-			<a class="login_btn">로그인</a>
+			<div class="login_btn">
+				<a href="#">로그인</a>
+			</div>
 		</div>
 	</div>
 	
