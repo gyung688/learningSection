@@ -77,5 +77,11 @@ public class BoardDAOImpl implements BoardDAO{
 		
 	}
 
+	//엑셀 출력 게시글 리스트
+	@Override
+	public List<BoardVO> excelBoardList(BoardVO boardVO) throws Exception {
+		return sql.selectList(namespace + ".excelBoardList", boardVO);
+	}
+
 
 }

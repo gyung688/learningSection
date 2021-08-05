@@ -3,22 +3,24 @@ package com.lhg.controller;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lhg.domain.BoardVO;
 import com.lhg.domain.PagingVO;
@@ -26,7 +28,7 @@ import com.lhg.domain.UserVO;
 import com.lhg.service.BoardService;
 
 /**
- * @author 이혜경
+ * @author lhg
  * @since 2021.07.28
  *
  */
@@ -39,9 +41,6 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 
-//	@Autowired
-//	FileUtils fileUtils;
-	
 	/**
 	 * Comment : 게시글 목록 페이지
 	 * @param boardVO
@@ -167,4 +166,18 @@ public class BoardController {
 		response.getOutputStream().close();
 	}
 	
+	@RequestMapping(value="/excelDown", method = RequestMethod.POST)
+	public String excelDown(Model model, BoardVO boardVO) throws Exception{
+        List<BoardVO> list = boardService.excelBoardList(boardVO);
+        
+        SXSSFWorkbook workbook = boardService.excelFileDownloadProcess(list);
+        
+        model.addAttribute("locale", Locale.KOREA);
+        model.addAttribute("workbook", workbook);
+        model.addAttribute("workbookName", "게시판표");
+        
+        return "excelDownloadView";
+	}
+
+
 }

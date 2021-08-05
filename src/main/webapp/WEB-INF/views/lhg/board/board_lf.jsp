@@ -35,6 +35,28 @@ function search_keyDown(){
  		}
  	})
 }
+
+function excelDownload(){
+	console.log("haha");
+	var frm = document.frm;
+	frm.action = "/lhg/board/excelDown";
+	frm.submit();
+}
+
+function excelUpload(){
+	var frm = new FormData(document.getElementById("frm"));
+	$.ajax({
+		url : "/lhg/board/excelUp",
+		data: f,
+		processData: false,
+		contentType: false,
+		type: "POST",
+		success: function(data){
+			console.log(data);
+			frm.result.innerHtmL = JSON.stringify(data);
+		}
+	})
+}
 </script>
 
 <div id="wrap">
@@ -56,6 +78,7 @@ function search_keyDown(){
 				<input type="hidden" id="kUserKey" name="kUserKey" value="${user.kUserKey}">
 				<input type="hidden" id="nowPage" name="nowPage" value="${paging.nowPage}">
 				<input type="hidden" id="eBoardKey" name="eBoardKey">
+				<input type="file" id="fileInput" name="fileInput">
 				
 				<div class="content">
 					<div class="content_tit">
@@ -116,6 +139,11 @@ function search_keyDown(){
 					</table>
 				</div>
 				
+				<div>
+					<button type="button" onclick="excelUpload()">엑셀업로드</button>
+					<button type="button" onclick="excelDownload()">엑셀다운로드</button>
+				</div>
+				
 				<div style="display: block; text-align: center;">		
 					<c:if test="${paging.startPage != 1 }">
 						<a href="/lhg/board/board_lf?nowPage=${paging.startPage - 1 }&cntPerPage=${paging.cntPerPage}&searchType=${boardVO.searchType}&searchWord=${boardVO.searchWord}">&lt;</a>
@@ -135,7 +163,11 @@ function search_keyDown(){
 					</c:if>
 				</div>
 				
-			</form>			
+			</form>		
+			
+			<div id="result">
+			</div>	
+
 		</div>
 	</section>
 	

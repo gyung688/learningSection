@@ -30,9 +30,6 @@
 	</insert>
 	
     <insert id="insertBoardFile" parameterType="hashMap">
-        	<!-- <selectKey keyProperty="eBoardKey" resultType="int" order="BEFORE">
-        	    SELECT LAST_INSERT_ID()
-        	</selectKey> -->
         INSERT INTO e_board_file(
         	e_board_key
         ,	org_file_name
@@ -154,5 +151,37 @@
         SET del_gbn = 'Y'
         WHERE e_board_key = #{eBoardKey}
     </update>
+	
+	 <select id="excelBoardList" parameterType="boardVO" resultType="boardVO">
+       SELECT
+        		b.e_board_key									AS eBoardKey
+        	,	b.e_board_no									AS eBoardNo 
+			,	b.e_board_title									AS eBoardTitle
+			,	b.e_board_content								AS eBoardContent
+			,	DATE_FORMAT(b.e_board_date,'%Y-%m-%d')			AS eBoardDate
+			,	b.k_user_key									AS kUserKey
+			,	k.k_user_name									AS kUserName
+      	FROM e_board b
+        INNER JOIN k_user k ON(k.k_user_key = b.k_user_key)
+        WHERE 1=1 
+        <if test='searchWord != null and searchWord != ""'>
+        	<choose>
+	        	<when test='searchType == "1"'>
+	        		AND
+	        		(
+	        			LOWER(b.e_board_title) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        			OR LOWER(k.k_user_name) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        		)
+	        	</when>
+	        	<when test='searchType == "2"'>
+	        		AND	LOWER(b.e_board_title) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        	</when>
+	        	<when test='searchType == "3"'>
+	        		AND	LOWER(k.k_user_name) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        	</when>
+        	</choose>
+        </if>
+        ORDER BY b.e_board_key DESC
+    </select>
 	
 </mapper>

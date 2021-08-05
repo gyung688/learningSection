@@ -37,4 +37,6 @@ public interface BoardDAO {
 	//삭제된 게시글 파일 수정
 	public void deleteBoardFile(int eBoardKey) throws Exception;
 	
+	//엑셀 출력 게시글 리스트
+	public List<BoardVO> excelBoardList(BoardVO boardVO) throws Exception;
 }

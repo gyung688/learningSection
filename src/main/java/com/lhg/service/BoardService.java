@@ -1,8 +1,10 @@
 package com.lhg.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.lhg.domain.BoardVO;
@@ -33,5 +35,8 @@ public interface BoardService {
 	//파일다운
 	public Map<String, Object> selectBoardFileDown(Map<String, Object> map) throws Exception;
 
+	public List<BoardVO> excelBoardList(BoardVO boardVO) throws Exception;
+
+	public SXSSFWorkbook excelFileDownloadProcess(List<BoardVO> list);
 	
 }
