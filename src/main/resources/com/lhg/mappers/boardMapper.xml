@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhg.mappers.boardMapper">
+    
+    <insert id="insertUpdatetBoard" parameterType="boardVO" useGeneratedKeys="true" keyProperty="eBoardKey">
+		INSERT INTO e_board(
+				e_board_key
+			,	e_board_no
+			,	e_board_title
+			,	e_board_content
+			,	e_board_date
+			,	k_user_key
+		)VALUES(
+				IF(#{eBoardKey} = "", NULL, #{eBoardKey})
+			,(
+				SELECT
+					CONCAT(#{eBoardNo}, "-" ,LPAD(IFNULL(MAX(RIGHT(e_board_no,3)), 0) +1 , 3, 0))
+				FROM e_board ALIAS_AS_SUBQUERY
+				WHERE 1=1
+				AND e_board_no LIKE CONCAT('%', #{eBoardNo} , '%')
+			)
+			,	#{eBoardTitle}
+			,	#{eBoardContent}
+			,	NOW()
+			,	#{kUserKey}
+		)ON DUPLICATE KEY UPDATE
+				e_board_title	= #{eBoardTitle}
+			,	e_board_content	= #{eBoardContent}
+			,	e_board_udate	= NOW()
+	</insert>
+	
+    <insert id="insertBoardFile" parameterType="hashMap">
+        	<!-- <selectKey keyProperty="eBoardKey" resultType="int" order="BEFORE">
+        	    SELECT LAST_INSERT_ID()
+        	</selectKey> -->
+        INSERT INTO e_board_file(
+        	e_board_key
+        ,	org_file_name
+        ,	stored_file_name
+        ,	file_size
+        ,	file_date
+        )VALUES(
+        	#{eBoardKey}
+        ,	#{org_file_name}
+        ,	#{stored_file_name}
+        ,	#{file_size}
+        ,	NOW()
+        )
+    </insert>
+	
+    <select id="selectBoardList" parameterType="boardVO" resultType="boardVO">
+       SELECT
+        		b.e_board_key									AS eBoardKey
+        	,	b.e_board_no									AS eBoardNo 
+			,	b.e_board_title									AS eBoardTitle
+			,	DATE_FORMAT(b.e_board_date,'%Y-%m-%d')			AS eBoardDate
+			,	b.k_user_key									AS kUserKey
+			,	k.k_user_name									AS kUserName
+      	FROM e_board b
+        INNER JOIN k_user k ON(k.k_user_key = b.k_user_key)
+        WHERE 1=1 
+        <if test='searchWord != null and searchWord != ""'>
+        	<choose>
+	        	<when test='searchType == "1"'>
+	        		AND
+	        		(
+	        			LOWER(b.e_board_title) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        			OR LOWER(k.k_user_name) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        		)
+	        	</when>
+	        	<when test='searchType == "2"'>
+	        		AND	LOWER(b.e_board_title) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        	</when>
+	        	<when test='searchType == "3"'>
+	        		AND	LOWER(k.k_user_name) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        	</when>
+        	</choose>
+        </if>
+        ORDER BY b.e_board_key DESC
+        LIMIT #{start}, #{cntPerPage}
+    </select>
+
+    <select id="selectBoardListCnt" parameterType="boardVO" resultType="int">
+		SELECT
+       		COUNT(*)
+      	FROM e_board b
+        INNER JOIN k_user k ON(k.k_user_key = b.k_user_key)
+        WHERE 1=1 
+        <if test='searchWord != null and searchWord != ""'>
+        	<choose>
+	        	<when test='searchType == "1"'>
+	        		AND
+	        		(
+	        			LOWER(b.e_board_title) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        			OR LOWER(k.k_user_name) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        		)
+	        	</when>
+	        	<when test='searchType == "2"'>
+	        		AND	LOWER(b.e_board_title) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        	</when>
+	        	<when test='searchType == "3"'>
+	        		AND	LOWER(k.k_user_name) LIKE CONCAT('%',LOWER(#{searchWord}),'%')
+	        	</when>
+        	</choose>
+        </if>
+    </select>
+    
+    <select id="selectBoardInfo" parameterType="boardVO" resultType="boardVO">
+        SELECT
+        		b.e_board_key			AS eBoardKey
+        	,	b.e_board_no			AS eBoardNo 
+			,	b.e_board_title			AS eBoardTitle
+			,	b.e_board_content		AS eBoardContent
+			,	b.e_board_date			AS eBoardDate
+			,	b.k_user_key			AS kUserKey
+			,	k.k_user_name			AS kUserName
+        FROM e_board b
+        INNER JOIN k_user k ON(k.k_user_key = b.k_user_key)
+        WHERE b.e_board_key = #{eBoardKey} 
+    </select>
+    
+    <select id="selectBoardFile" parameterType="int" resultType="hashMap">
+    	SELECT
+    		file_key				AS file_key
+    	,	org_file_name			AS org_file_name
+    	,	ROUND(file_size/1024,1) AS file_size
+    	FROM e_board_file
+        WHERE e_board_key = #{eBoardKey} 
+    	AND del_gbn = 'N' 
+    	ORDER BY file_key ASC
+    </select>
+    
+    <select id="selectBoardFileDown" parameterType="hashMap" resultType="hashMap">
+		SELECT
+			file_key			AS file_key
+		,	stored_file_name	AS stored_file_name
+		,	org_file_name		AS org_file_name
+		FROM e_board_file
+		WHERE file_key = #{fileKey}
+    </select>
+    
+	<delete id="deleteBoard" parameterType="int">
+	    DELETE FROM e_board WHERE e_board_key = #{eBoardKey}
+	</delete>
+    
+    <update id="updateBoardFile" parameterType="hashMap">
+    	UPDATE e_board_file 
+    	SET del_gbn = 'Y'
+    	WHERE file_key = #{fileKey}
+    </update>
+    
+    <update id="deleteBoardFile" parameterType="int">
+        UPDATE e_board_file
+        SET del_gbn = 'Y'
+        WHERE e_board_key = #{eBoardKey}
+    </update>
+	
+</mapper>

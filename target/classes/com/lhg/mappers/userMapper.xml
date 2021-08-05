@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhg.mappers.userMapper">
+    
+    <!-- 회원가입 -->
+    <insert id="insertSignUp">
+        INSERT INTO k_user(
+        	k_user_id
+        ,	k_user_pw
+        ,	k_user_name
+        ,	k_user_mail
+        ,	k_user_post
+        ,	k_user_addr
+        ,	k_user_addr_detail
+        ,	k_user_date
+        )VALUES(
+        	#{kUserId}
+        ,	#{kUserPw}	
+        ,	#{kUserName}
+        ,	#{kUserMail}
+        ,	#{kUserPost}
+        ,	#{kUserAddr}
+        ,	#{kUserAddrDetail}
+        ,	SYSDATE()
+        )
+    </insert>
+    
+	<!-- 아이디 중복확인 -->
+    <select id="chkUserId" parameterType="userVO" resultType="int">
+    	SELECT
+    		COUNT(*)
+    	FROM k_user
+    	WHERE k_user_id = #{kUserId}  
+    
+    </select>
+    
+   <!-- 로그인 -->
+	<select id="signin" parameterType="userVO" resultType="userVO">
+	    SELECT
+	    	k_user_key				AS kUserKey
+	    ,	k_user_id				AS kUserId
+	    ,	k_user_pw				AS kUserPw
+	    ,	k_user_name				AS kUserName
+	    ,	k_user_mail				AS kUserMail
+	    ,	k_user_post				AS kUserPost
+	    ,	k_user_addr				AS kUserAddr
+	    ,	k_user_addr_detail		AS kUserAddrDetail
+	    ,	k_user_date				AS kUserDate
+	    FROM k_user
+	    WHERE k_user_id = #{kUserId}
+	</select>   
+	
+   <!-- 회원정보 -->
+	<select id="userInfo" parameterType="int" resultType="userVO">
+	    SELECT
+	    	k_user_key				AS kUserKey
+	    ,	k_user_id				AS kUserId
+	    ,	k_user_pw				AS kUserPw
+	    ,	k_user_name				AS kUserName
+	    ,	k_user_mail				AS kUserMail
+	    ,	k_user_post				AS kUserPost
+	    ,	k_user_addr				AS kUserAddr
+	    ,	k_user_addr_detail		AS kUserAddrDetail
+	    ,	k_user_date				AS kUserDate
+	    FROM k_user
+	    WHERE k_user_key = #{kUserKey}
+	</select>   
+	
+	<update id="userUpdate" parameterType="userVO">
+	    UPDATE k_user
+	    SET
+	    	k_user_post			= #{kUserPost}
+	    ,	k_user_addr			= #{kUserAddr}				
+	    ,	k_user_addr_detail	= #{kUserAddrDetail}
+	    WHERE k_user_key = #{kUserKey}
+	</update>
+</mapper>
