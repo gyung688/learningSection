@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+.mainVisual{
+	display: flex;
+}
+
+.mainVisual img{
+	width: 60%;
+}
