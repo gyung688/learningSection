@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useRef, useState} from "react"
 // sign up form
 // 1. name
 // 2. birth
@@ -6,50 +6,58 @@ import {useState} from "react"
 // 4. intro
 
 const Register = ()=>{
-    const [name, setName] = useState("name");
-    const [birth, setBirth] = useState("");
-    const [country, setCountry] = useState("");
-    const [bio, setBio] = useState("");
 
-    const onChangeName = (e)=>{
-        setName(e.target.value);
-    }
-    
-    const onChangeBirth = (e)=>{
-        setBirth(e.target.value);
+    const [input, setInput] = useState({
+        name: "",
+        birth: "",
+        country: "",
+        bio: "",
+    });
+
+    const countRef = useRef(0);
+    const inputRef = useRef();
+
+    const onChange = (e) =>{
+        countRef.current++;
+        console.log(countRef.current);
+        setInput({
+          ...input,
+          [e.target.value] : e.target.value,
+        })
     }
 
-    const onChangeCountry = (e)=>{
-        setCountry(e.target.value);
+    const onSubmit = () => {
+        if(input.name === ""){
+            //이름을 입력하는 DOM요소 포커스
+            // console.log(inputRef.current);
+            inputRef.current.focus();
+        }
     }
-
-    const onChangeBio = (e)=>{
-        setBio(e.target.value);
-    }
-
 
     return (
         <div>
             <div>
-                <input value={name} onChange={onChangeName} placeholder={"NAME"}/>
-                {name}
+                <input ref={inputRef} name="name" value={input.name} onChange={onChange} placeholder={"NAME"}/>
+                {input.name}
             </div>
             <div>
-                <input value={birth} onChange={onChangeBirth} type="date" />
+                <input value={input.birth} onChange={onChange} type="date" />
             </div>
             <div>
-                <select value={country} onChange={onChangeCountry}>
+                <select value={input.country} onChange={onChange}>
                     <option></option>
                     <option value="kr">Korea</option>
                     <option value="ca">Canada</option>
                     <option value="us">US</option>
                     <option value="uk">UK</option>
                 </select>
-                {country}
+                {input.country}
             </div>
             <div>
-                <textarea value={bio} onChange={onChangeBio}/>
+                <textarea value={input.bio} onChange={onChange}/>
             </div>
+
+            <button onClick={onSubmit}>submit</button>
         </div>
     )
 };
